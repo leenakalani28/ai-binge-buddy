@@ -1,0 +1,193 @@
+{
+  "scope": "Offline AppTest with mocked TMDB/Groq; viewport positions not measured",
+  "cases": [
+    {
+      "button": "Home: Let's Find Something to Watch",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Group: +",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Group: minus",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Group: Back",
+      "result": "PASS",
+      "destination": "welcome",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Group: Continue",
+      "result": "PASS",
+      "destination": "preferences",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Group: Continue with empty name",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Preferences: Back",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Preferences: Find Our Top 3",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Missing credentials: Back to group",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Catalog error: Retry",
+      "result": "PASS",
+      "destination": "preferences",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Catalog error: Back to group",
+      "result": "PASS",
+      "destination": "group",
+      "top_script_rendered": false
+    },
+    {
+      "button": "AI error: Retry AI selection",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "AI error: Edit Preferences",
+      "result": "PASS",
+      "destination": "preferences",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Shortlist: Lock card 1",
+      "result": "PASS",
+      "destination": "winner",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Shortlist: Lock card 2",
+      "result": "PASS",
+      "destination": "winner",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Shortlist: Lock card 3",
+      "result": "PASS",
+      "destination": "winner",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Shortlist: Show Us 3 More",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Shortlist: Edit Preferences",
+      "result": "PASS",
+      "destination": "preferences",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Shortlist: Start over",
+      "result": "PASS",
+      "destination": "welcome",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Wheel: result received",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Wheel: Lock choice",
+      "result": "PASS",
+      "destination": "winner",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Winner: Back to shortlist",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Winner: Find Something Else",
+      "result": "PASS",
+      "destination": "reveal",
+      "top_script_rendered": true
+    },
+    {
+      "button": "Winner: Start over",
+      "result": "PASS",
+      "destination": "welcome",
+      "top_script_rendered": false
+    },
+    {
+      "button": "Winner sidebar: Start Over",
+      "result": "PASS",
+      "destination": "welcome",
+      "top_script_rendered": false
+    }
+  ],
+  "external_links": [
+    {
+      "screen": "reveal",
+      "button": "Viewing options \u00b7 JustWatch",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    },
+    {
+      "screen": "reveal",
+      "button": "View on TMDB",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    },
+    {
+      "screen": "reveal",
+      "button": "Watch Trailer",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    },
+    {
+      "screen": "winner",
+      "button": "Find where to watch \u2197",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    },
+    {
+      "screen": "winner",
+      "button": "\u25b6 Watch trailer",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    },
+    {
+      "screen": "winner",
+      "button": "View on TMDB",
+      "result": "PASS: configured URL",
+      "scope": "External page not opened; fixture URLs"
+    }
+  ]
+}

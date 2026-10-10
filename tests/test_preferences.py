@@ -130,3 +130,30 @@ def test_llm_selected_order_is_used_without_python_ranking(monkeypatch):
     assert [r["candidate"].id for r in app.session_state["batch"]] == [48, 25, 2]
     assert not app.get("progress")
     assert all("score" not in row for row in app.session_state["batch"])
+
+def test_winner_new_picks_search_runs_after_leaving_winner(monkeypatch):
+    import hashlib
+    import json
+    import streamlit as st
+    from pathlib import Path
+    from streamlit.testing.v1 import AppTest
+    from src import groq_client
+    from src.preference_models import Candidate
+    users = [Preference(name="Alex")]
+    candidates = [Candidate(id=i, media_type="movie", title=f"Title {i}") for i in range(1, 7)]
+    observed = []
+    def recommend(rows, users, roast, region):
+        observed.append(st.session_state.stage)
+        assert [r["candidate"].id for r in rows] == [4, 5, 6]
+        return groq_client.Response.model_validate({"group_analysis": {"common_interests": [], "conflicting_preferences": [], "group_summary": "New picks"}, "recommendations": [{"tmdb_id": i, "media_type": "movie", "reason": "Fits", "user_matches": {"Alex": "Fits"}, "compromise_note": ""} for i in (4, 5, 6)], "roast": ""})
+    monkeypatch.setattr(groq_client, "recommend", recommend)
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=15)
+    for key, value in {"stage": "winner", "users": users, "pool": candidates, "seen": {"movie:1", "movie:2", "movie:3"}, "winner": {"candidate": candidates[0]}, "celebration": "Enjoy", "saved_roast_enabled": True, "signature": hashlib.sha256(json.dumps({"users": [u.model_dump() for u in users], "region": "GB"}, sort_keys=True).encode()).hexdigest()}.items():
+        app.session_state[key] = value
+    app.run()
+    next(b for b in app.button if b.label == "Find Something Else").click().run()
+    assert not app.exception
+    assert observed == ["reveal"]
+    assert app.session_state["stage"] == "reveal"
+    assert [r["candidate"].id for r in app.session_state["batch"]] == [4, 5, 6]
+    assert not any('<div class="winner-heading">' in m.value for m in app.markdown)

@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#17191d;color:#fff8ed;font:19px 'Segoe UI',system-ui;text-align:center;padding:24px 12px;box-sizing:border-box;background:radial-gradient(ellipse at center,#383024,#17191d 70%)}canvas{width:640px;max-width:100%;height:auto;filter:drop-shadow(0 18px 24px #0008)}button{background:#f2c879;color:#241c10;border:1px solid #ffe5b4;border-radius:14px;padding:18px 32px;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 6px 24px #f2c87925}button:hover{background:#ffe0a3}button:disabled{opacity:.5}#result{min-height:36px;padding:20px;font-size:24px;font-weight:700}.eyebrow{color:#f2c879;letter-spacing:.15em;font-size:15px;font-weight:700;margin-bottom:12px}.hint{color:#d2c9bd;margin:8px 0 20px;font-size:18px}
+</style></head><body><div class="eyebrow">THE WHEEL OF DESTINY</div><div class="hint">Three contenders. Equal chances. Let the universe choose.</div><canvas id="wheel" width="800" height="800" aria-label="Three-title decision wheel"></canvas><br><button id="spin">Spin the Wheel of Destiny</button><div id="result" role="status" aria-live="polite"></div><script>
+const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d'),button=document.getElementById('spin');let titles=[],angle=0,busy=false,batch=null,posters=[],posterUrls=[];
+function send(type,extra={}){parent.postMessage({isStreamlitMessage:true,type,...extra},'*')}
+function sector(a){ctx.beginPath();ctx.moveTo(200,200);ctx.arc(200,200,170,a,a+2*Math.PI/3);ctx.closePath()}
+function draw(){
+ ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,400,400);
+ ctx.beginPath();ctx.arc(200,200,178,0,2*Math.PI);ctx.fillStyle='#f2c879';ctx.fill();
+ const colors=['#334552','#544231','#3e4c3b'];
+ for(let i=0;i<3;i++){
+  const a=angle+i*2*Math.PI/3;
+  ctx.save();sector(a);ctx.clip();
+  ctx.fillStyle=colors[i];ctx.fillRect(0,0,400,400);
+  // Rotate the full-bleed artwork with its sector, cover the sector bounds,
+  // and crop it using the wedge path rather than drawing a thumbnail.
+  ctx.translate(200,200);ctx.rotate(a+Math.PI/3+Math.PI/2);
+  const img=posters[i];
+  if(img&&img.complete&&img.naturalWidth){
+   const scale=Math.max(300/img.naturalWidth,255/img.naturalHeight);
+   const w=img.naturalWidth*scale,h=img.naturalHeight*scale;
+   ctx.drawImage(img,-w/2,-90+(255-h)/2,w,h);
+  }
+  ctx.fillStyle='rgba(0,0,0,.32)';ctx.fillRect(-180,-180,360,360);
+  ctx.restore();
+  sector(a);ctx.strokeStyle='#f2c879';ctx.lineWidth=1.5;ctx.stroke();
+  // Move with the sector, but keep lettering horizontal and upright.
+  const middle=a+Math.PI/3;
+  ctx.save();sector(a);ctx.clip();
+  ctx.translate(200+108*Math.cos(middle),200+108*Math.sin(middle));
+  // Translucent lettering sits directly on the artwork, without a label box.
+  ctx.fillStyle='rgba(255,248,237,.68)';ctx.font='700 14px system-ui';ctx.textAlign='center';
+  ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
+  const words=(titles[i]||'').slice(0,60).match(/.{1,18}(?:\s|$)|.{1,18}/g)||[];
+  const lines=words.slice(0,3);
+  lines.forEach((word,j)=>ctx.fillText(word.trim(),0,5+(j-(lines.length-1)/2)*17));ctx.restore();
+ }
+ ctx.beginPath();ctx.arc(200,200,29,0,2*Math.PI);ctx.fillStyle='#f2c879';ctx.fill();
+ ctx.fillStyle='#241c10';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.fillText('MOVIE',200,198);ctx.fillText('NIGHT',200,210);
+ ctx.fillStyle='#fff1d5';ctx.beginPath();ctx.moveTo(188,8);ctx.lineTo(212,8);ctx.lineTo(200,45);ctx.fill();
+}
+function uniformIndex(){let x=new Uint32Array(1);do{crypto.getRandomValues(x)}while(x[0]>=4294967295);return x[0]%3}
+button.onclick=()=>{if(busy||titles.length!==3)return;busy=true;button.disabled=true;document.getElementById('result').textContent='Destiny is deliberating…';const chosen=uniformIndex(),tau=2*Math.PI,target=-Math.PI/2-(chosen+.5)*tau/3;const start=angle,delta=6*tau+((target-start)%tau+tau)%tau;const begun=performance.now();function frame(now){const t=Math.min(1,(now-begun)/3600);angle=start+delta*(1-Math.pow(1-t,4));draw();if(t<1)requestAnimationFrame(frame);else{angle=((angle%tau)+tau)%tau;const actual=Math.floor((((-Math.PI/2-angle)%tau+tau)%tau)/(tau/3));document.getElementById('result').textContent=titles[actual];busy=false;button.disabled=false;send('streamlit:setComponentValue',{value:{index:actual,batch_id:batch,event:crypto.randomUUID()}})}}requestAnimationFrame(frame)};
+function resize(){send('streamlit:setFrameHeight',{height:Math.min(640,(window.innerWidth||664)-24)+240})}
+window.addEventListener('message',e=>{if(e.data.type==='streamlit:render'){titles=e.data.args.titles;batch=e.data.args.batch_id;const urls=e.data.args.posters||[];if(JSON.stringify(urls)!==JSON.stringify(posterUrls)){posterUrls=urls;posters=urls.map(url=>{if(!url)return null;const img=new Image();img.onload=()=>{if(!busy)draw()};img.src=url;return img})}button.disabled=busy||e.data.disabled;draw();resize()}});window.addEventListener('resize',resize);send('streamlit:componentReady',{apiVersion:1});resize();
+</script></body></html>

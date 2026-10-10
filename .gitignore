@@ -1,0 +1,8 @@
+.env
+Groq API key.txt
+TMDB API Key.txt
+.venv/
+__pycache__/
+.pytest_cache/
+.streamlit/secrets.toml
+~$*

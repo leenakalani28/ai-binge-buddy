@@ -1,8 +1,10 @@
 import hashlib
+import base64
 import json
 import uuid
 from html import escape
 from pathlib import Path
+from functools import lru_cache
 import streamlit as st
 import streamlit.components.v1 as components
 from src import config, groq_client, tmdb_client
@@ -13,7 +15,16 @@ from src.ui_components import card, commentary, wheel_selection
 from src.wheel_component import wheel
 
 st.set_page_config(page_title="AI Binge Buddy", page_icon="🍿", layout="wide")
-st.markdown(f"<style>{(Path(__file__).parent / 'assets/styles.css').read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+
+@lru_cache(maxsize=1)
+def home_collage_url():
+    image = Path(__file__).parent / "assets/home-poster-collage.jpg"
+    return "data:image/jpeg;base64," + base64.b64encode(image.read_bytes()).decode("ascii")
+
+home_background = ""
+if st.session_state.get("stage", "welcome") in {"welcome", "group", "preferences", "reveal", "winner"}:
+    home_background = f':root{{--home-collage-image:url("{home_collage_url()}")}}'
+st.markdown(f"<style>{(Path(__file__).parent / 'assets/styles.css').read_text(encoding='utf-8')}{home_background}</style>", unsafe_allow_html=True)
 initialize()
 s = st.session_state
 

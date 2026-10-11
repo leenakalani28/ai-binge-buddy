@@ -9,7 +9,7 @@ OUTPUT = ROOT / "AI Binge Buddy - Final Project Report.docx"
 
 sections = [
     ("Title", "AI Binge Buddy"),
-    ("Subtitle", "Final project report | 10 October 2026"),
+    ("Subtitle", "Final project report | 11 October 2026"),
     ("Heading1", "1. Project overview"),
     (None, "A Streamlit AI assistant that helps 1-6 people choose a movie, TV series or documentary. Users select content type, genre, original language and streaming platform. The app offers up to three real recommendations, personalised explanations, an optional friendly roast, a poster-filled decision wheel and a winner celebration."),
     (None, "Built using Python, Streamlit, HTTPX, Pydantic and uv. OpenAI gpt-oss-120b, accessed through Groq, makes the recommendation decisions. Python checks eligibility and validates the response; it no longer provides fallback recommendations."),
@@ -23,11 +23,11 @@ sections = [
     (None, '"do not use python as fallback if LLM is not responding. instead just show me the error message on screen"'),
     (None, "The final AI prompt grounds selection in supplied TMDB data: choose exactly the required number of distinct candidate IDs, balance everyone’s tastes, explain individual fit and compromises, follow the JSON structure, and never invent titles, availability or match percentages. Python checks whether those instructions were followed."),
     ("Heading1", "4. Iterations tried"),
-    (None, "Started with Python scoring and limited LLM reranking, then moved to LLM-led selection of all eligible retrieved candidates. Removed runtime, mood and score controls. Enlarged fonts and forms, improved colours, added distinct commentary panels, aligned selection buttons and redesigned the wheel with poster sectors and watermark titles."),
+    (None, "Moved from Python scoring to LLM-led selection of eligible TMDB candidates. Simplified preferences to four fields. Redesigned setup screens, enlarged fonts, separated AI commentary, added poster-filled wheel sectors and a winner celebration. Fixed stacked-screen navigation and wheel scroll handling. Added a faint poster-collage background while keeping form panels opaque for readability."),
     (None, "Improved responsiveness with batched forms, parallel API requests, reused connections and a 24-hour preference catalogue cache. Fetches detail for 48 titles initially, expanding to up to 120 if fewer than three qualify. Oversized Groq requests are compacted; if still rejected, the LLM evaluates smaller batches and selects finalists. API/model failures now show an error and Retry button, without substitute recommendations."),
     ("Heading1", "5. Learnings and observations"),
     (None, "Specific prompts and screenshots made iterative improvements easier. The LLM is useful for subjective decisions, while external facts, grounding prompts and Python validation make outputs more dependable. Prompt instructions alone do not guarantee correctness. Larger candidate lists increase request size, latency and rate-limit risk; caching and compact data help. API keys stay in an ignored .env file."),
-    (None, "Latest verification: 21 automated tests passed, with wheel JavaScript checks previously passing. These checks cover validation, error/retry recovery and selection flows, but do not prove recommendation quality or visual perfection. No before-and-after performance benchmark was recorded."),
+    (None, "Verification: 23 regression tests passed after the final background changes. A separate offline audit passed 25 button/action cases and six configured external-link checks; wheel outcomes and the scroll guard also passed. API responses were mocked. Actual browser scroll positions and external pages were not verified, and no performance benchmark was recorded."),
 ]
 
 def paragraph(style, text):

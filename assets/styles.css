@@ -237,3 +237,18 @@ a{color:#f2d399}
 @keyframes header-balloon-rise{0%{transform:translate(0,0) rotate(-4deg);opacity:0}12%{opacity:.9}75%{opacity:.8}100%{transform:translate(var(--drift),-380px) rotate(5deg);opacity:0}}
 @keyframes header-ribbon-fall{0%{transform:translate(0,0) rotate(0deg);opacity:0}8%{opacity:.95}75%{opacity:.85}100%{transform:translate(var(--drift),260px) rotate(240deg);opacity:0}}
 @media(max-width:700px){.winner-heading{padding:12px 18px 24px}}
+
+/* Page atmosphere; background layers do not alter layout or controls. */
+.stApp:has(.hero),.stApp:has(.st-key-group_panel),.stApp:has(.st-key-preferences_panel),.stApp:has(.st-key-reveal_panel),.stApp:has(.st-key-winner_panel){
+  background-image:linear-gradient(90deg,rgba(23,25,29,.98) 0%,rgba(23,25,29,.96) 48%,rgba(23,25,29,.92) 100%),var(--home-collage-image);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}
+
+/* Balance the collage at both edges of setup, shortlist and winner pages. */
+.stApp:has(.st-key-group_panel),.stApp:has(.st-key-preferences_panel),.stApp:has(.st-key-reveal_panel),.stApp:has(.st-key-winner_panel){
+  background-image:linear-gradient(90deg,rgba(23,25,29,.82) 0%,rgba(23,25,29,.96) 35%,rgba(23,25,29,.96) 65%,rgba(23,25,29,.92) 100%),var(--home-collage-image);
+  background-position:right center;
+}

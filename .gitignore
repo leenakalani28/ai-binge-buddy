@@ -7,3 +7,6 @@ __pycache__/
 .streamlit/secrets.toml
 ~$*
 button-audit-run.log
+*.docx
+Final Button Audit.txt
+button-audit-results.json
